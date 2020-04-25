@@ -6,12 +6,20 @@ import requests
 from .objects import GeneralInfo, ItemInfo, HeroInfo, SkillInfo
 from tqdm import tqdm
 
+
 class PatchFetcher:
     def __init__(self, version="7.26a"):
         self.version = version
         self.baseURL = f"http://www.dota2.com/patches/{version}"
+        self.baseGitURL = "https://sirily11.github.io/dota2_patch_fetcher"
 
     def download_image(self, image_src: str, dest: str):
+        """
+        Download image and then return new git url
+        :param image_src:
+        :param dest:
+        :return:
+        """
         base_name = path.basename(image_src)
         download_path = path.join(os.curdir, "download", dest, base_name)
         if not path.exists(path.join("download", dest)):
@@ -20,6 +28,7 @@ class PatchFetcher:
             resp = requests.get(image_src)
             with open(download_path, 'wb+') as f:
                 f.write(resp.content)
+        return os.path.join(self.baseGitURL, "download", dest, base_name)
 
     def fetch(self):
         a_session = HTMLSession()
@@ -56,7 +65,7 @@ class PatchFetcher:
             if img:
                 image = img.attrs.get('src')
                 if image:
-                    self.download_image(image, dest="item")
+                    image = self.download_image(image, dest="item")
                 item = ItemInfo(name=name.text, update_description=content, image=image)
                 items.append(item)
         return items
@@ -109,7 +118,7 @@ class PatchFetcher:
                 if img:
                     image = img.attrs.get("src")
                     if image:
-                        self.download_image(image, dest="ability")
+                        image = self.download_image(image, dest="ability")
                     skills.append(
                         SkillInfo(
                             name=name.text,
@@ -121,7 +130,7 @@ class PatchFetcher:
             if hero_image:
                 hero_image_src = hero_image.attrs.get("src")
                 if hero_image_src:
-                    self.download_image(hero_image_src, dest="hero")
+                    hero_image_src = self.download_image(hero_image_src, dest="hero")
                 heroes.append(
                     HeroInfo(
                         name=hero_name.text,

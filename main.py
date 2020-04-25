@@ -2,6 +2,6 @@ from patch_fetcher.patch_fetcher import PatchFetcher
 from pprint import pprint
 
 if __name__ == '__main__':
-    p = PatchFetcher()
+    p = PatchFetcher(version='7.25')
     g = p.fetch()
     pprint(g.to_json())
