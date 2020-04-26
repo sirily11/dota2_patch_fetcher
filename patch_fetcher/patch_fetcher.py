@@ -78,7 +78,7 @@ class PatchFetcher:
         patch_list = container.find(".PatchNote")
         content = ""
         for patch in tqdm(patch_list, desc="Fetching general"):
-            content += f"{patch.text}\n"
+            content += f"- {patch.text}\n"
         return GeneralInfo(version=self.version, description=content, items=None, heroes=None)
 
     def fetch_item(self, response: HTML) -> List[ItemInfo]:
