@@ -47,15 +47,15 @@ class PatchFetcher:
     def upload(self):
         username = os.getenv("username")
         password = os.getenv("password")
-        auth_url = "http://0.0.0.0:8000"
-        url = "http://0.0.0.0:8000/dota2/version/"
+        auth_url = "https://api.sirileepage.com"
+        url = "https://api.sirileepage.com/dota2/version/"
         auth = requests.post(f"{auth_url}/api/token/",
                              {"username": username, "password": password})
         hed = {'Authorization': 'Bearer ' + auth.json()['access']}
         data = self.fetch()
         res = requests.post(url, json=data.to_json(), headers=hed)
         if res.status_code == 201:
-            pprint(res.json())
+            pass
         else:
             print("error")
         print("Finished...")
@@ -93,7 +93,7 @@ class PatchFetcher:
             patch_notes = i.find(".PatchNote")
             content = ""
             for patch in patch_notes:
-                content += f"{patch.text}\n"
+                content += f"- {patch.text}\n"
             if img:
                 image = img.attrs.get('src')
                 if image:
@@ -120,7 +120,7 @@ class PatchFetcher:
                 label = "Talents"
                 patches = ""
                 for patch in talent_note.find(".PatchNote"):
-                    patches += f"{patch.text}\n"
+                    patches += f"- {patch.text}\n"
                 skills.append(
                     SkillInfo(
                         name=label,
@@ -132,7 +132,7 @@ class PatchFetcher:
             if hero_note:
                 patches = ""
                 for patch in hero_note.find(".PatchNote"):
-                    patches += f"{patch.text}\n"
+                    patches += f"- {patch.text}\n"
                 skills.append(
                     SkillInfo(
                         name="Hero",
@@ -146,7 +146,7 @@ class PatchFetcher:
                 name = ability.find(".AbilityName", first=True)
                 patches = ""
                 for patch in ability.find(".PatchNote"):
-                    patches += f"{patch.text}\n"
+                    patches += f"- {patch.text}\n"
                 if img:
                     image = img.attrs.get("src")
                     if image:

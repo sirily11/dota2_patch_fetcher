@@ -6,7 +6,7 @@ if __name__ == '__main__':
     p = PatchFetcher(version='7.22')
     # g = p.upload()
     versions = p.fetch_versions()
-    for v in tqdm(versions[27:]):
+    for v in tqdm(versions):
         try:
             print("Uploading version ", v)
             p = PatchFetcher(version=v)
