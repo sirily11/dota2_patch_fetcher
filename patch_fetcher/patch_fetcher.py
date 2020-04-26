@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import List
 from os import path
 import os
@@ -6,12 +7,25 @@ import requests
 from .objects import GeneralInfo, ItemInfo, HeroInfo, SkillInfo
 from tqdm import tqdm
 
+username = os.getenv("news-feed-username")
+password = os.getenv("news-feed-password")
+
 
 class PatchFetcher:
     def __init__(self, version="7.26a"):
         self.version = version
         self.baseURL = f"http://www.dota2.com/patches/{version}"
         self.baseGitURL = "https://sirily11.github.io/dota2_patch_fetcher"
+
+    def fetch_versions(self) -> List[str]:
+        a_session = HTMLSession()
+        r: HTMLResponse = a_session.get(self.baseURL)
+        container = r.html.find("select", first=True)
+        options = []
+        for o in container.find("option"):
+            if "value" in o.attrs:
+                options.append(o.text)
+        return options
 
     def download_image(self, image_src: str, dest: str):
         """
@@ -30,6 +44,22 @@ class PatchFetcher:
                 f.write(resp.content)
         return os.path.join(self.baseGitURL, "download", dest, base_name)
 
+    def upload(self):
+        username = os.getenv("username")
+        password = os.getenv("password")
+        auth_url = "http://0.0.0.0:8000"
+        url = "http://0.0.0.0:8000/dota2/version/"
+        auth = requests.post(f"{auth_url}/api/token/",
+                             {"username": username, "password": password})
+        hed = {'Authorization': 'Bearer ' + auth.json()['access']}
+        data = self.fetch()
+        res = requests.post(url, json=data.to_json(), headers=hed)
+        if res.status_code == 201:
+            pprint(res.json())
+        else:
+            print("error")
+        print("Finished...")
+
     def fetch(self):
         a_session = HTMLSession()
         r: HTMLResponse = a_session.get(self.baseURL)
@@ -43,6 +73,8 @@ class PatchFetcher:
 
     def fetch_general(self, response: HTML) -> GeneralInfo:
         container = response.find("#GeneralSection", first=True)
+        if not container:
+            return GeneralInfo(version=self.version, description="None", items=None, heroes=None)
         patch_list = container.find(".PatchNote")
         content = ""
         for patch in tqdm(patch_list, desc="Fetching general"):
@@ -87,7 +119,7 @@ class PatchFetcher:
             if talent_note:
                 label = "Talents"
                 patches = ""
-                for patch in talent_note.find("PatchNote"):
+                for patch in talent_note.find(".PatchNote"):
                     patches += f"{patch.text}\n"
                 skills.append(
                     SkillInfo(

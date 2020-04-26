@@ -22,6 +22,8 @@ class SkillInfo:
         self.image = image
 
     def to_json(self):
+        if self.update_description is None:
+            print("None!!!")
         return {
             "name": self.name,
             "update_description": self.update_description,
