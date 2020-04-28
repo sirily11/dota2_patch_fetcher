@@ -47,8 +47,10 @@ class PatchFetcher:
     def upload(self):
         username = os.getenv("username")
         password = os.getenv("password")
-        auth_url = "https://api.sirileepage.com"
-        url = "https://api.sirileepage.com/dota2/version/"
+        # auth_url = "https://api.sirileepage.com"
+        # url = "https://api.sirileepage.com/dota2/version/"
+        url ="http://0.0.0.0:8000/dota2/version/"
+        auth_url = "http://0.0.0.0:8000"
         auth = requests.post(f"{auth_url}/api/token/",
                              {"username": username, "password": password})
         hed = {'Authorization': 'Bearer ' + auth.json()['access']}
@@ -57,7 +59,7 @@ class PatchFetcher:
         if res.status_code == 201:
             pass
         else:
-            print("error")
+            print(res.json())
         print("Finished...")
 
     def fetch(self):
