@@ -48,8 +48,8 @@ class PatchFetcher:
         username = os.getenv("username")
         password = os.getenv("password")
         # auth_url = "https://api.sirileepage.com"
-        # url = "https://api.sirileepage.com/dota2/version/"
-        url ="http://0.0.0.0:8000/dota2/version/"
+        # url = "https://api.sirileepage.com/dota2/patchversion/"
+        url ="http://0.0.0.0:8000/dota2/patchversion/"
         auth_url = "http://0.0.0.0:8000"
         auth = requests.post(f"{auth_url}/api/token/",
                              {"username": username, "password": password})
