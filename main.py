@@ -3,7 +3,7 @@ from pprint import pprint
 from tqdm import tqdm
 
 if __name__ == '__main__':
-    p = PatchFetcher(version='7.27')
+    p = PatchFetcher('7.27c')
     g = p.upload()
     # versions = p.fetch_versions()
     # for v in tqdm(versions):
