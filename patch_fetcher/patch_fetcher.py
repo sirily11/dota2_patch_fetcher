@@ -49,8 +49,8 @@ class PatchFetcher:
         password = os.getenv("password")
         auth_url = "https://api.sirileepage.com"
         url = "https://api.sirileepage.com/dota2/patchversion/"
-        # url ="http://0.0.0.0:8000/dota2/patchversion/"
-        # auth_url = "http://0.0.0.0:8000"
+        # url ="http://0.0.0.0/dota2/patchversion/"
+        # auth_url = "http://0.0.0.0"
         auth = requests.post(f"{auth_url}/api/token/",
                              {"username": username, "password": password})
         hed = {'Authorization': 'Bearer ' + auth.json()['access']}
@@ -110,10 +110,10 @@ class PatchFetcher:
             return []
         hero_list = container.find(".HeroNotes")
         heroes = []
+
         for hero in tqdm(hero_list, desc="Fetching Heroes"):
             hero_name = hero.find(".HeroName", first=True)
             hero_image = hero.find(".HeroImage", first=True)
-
             skills = []
             talent_note = hero.find(".TalentNotes", first=True)
             hero_note = hero.find(".HeroNotesList", first=True)
