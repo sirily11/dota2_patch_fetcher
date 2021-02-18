@@ -25,13 +25,15 @@ def download_image(image_src: str, dest: str):
 
 
 def main():
-    for attr in ["heroes", "abilities", "items"]:
+    for attr in ["items"]:
         p = path.join('resources', attr + '.json')
         with open(p) as f:
             data = json.loads(f.read())
             for key, value, in tqdm(data.items()):
                 if 'img' in value:
-                    image_path = "https://cdn.dota2.com" + value['img'].replace('png?', 'png')
+                    img = value['img'].replace('png?', 'png')
+                    img = img.split('t=')[0]
+                    image_path = "https://cdn.dota2.com" + img
                     try:
                         download_image(image_path, attr)
                     except  Exception as e:
