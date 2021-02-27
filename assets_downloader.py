@@ -25,13 +25,13 @@ def download_image(image_src: str, dest: str):
 
 
 def main():
-    for attr in ["items"]:
+    for attr in ["heroes"]:
         p = path.join('resources', attr + '.json')
         with open(p) as f:
             data = json.loads(f.read())
             for key, value, in tqdm(data.items()):
                 if 'img' in value:
-                    img = value['img'].replace('png?', 'png')
+                    img = value['icon'].replace('png?', 'png')
                     img = img.split('t=')[0]
                     image_path = "https://cdn.dota2.com" + img
                     try:
