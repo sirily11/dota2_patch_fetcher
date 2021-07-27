@@ -25,7 +25,7 @@ def download_image(image_src: str, dest: str):
 
 
 def main():
-    for attr in ["heroes"]:
+    for attr in ["abilities"]:
         p = path.join('resources', attr + '.json')
         with open(p) as f:
             data = json.loads(f.read())
